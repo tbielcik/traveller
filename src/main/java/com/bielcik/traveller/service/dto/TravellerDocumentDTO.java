@@ -8,6 +8,6 @@ public class TravellerDocumentDTO {
     private Long travellerId;
     private DocumentType documentType;
     private String documentNumber;
-    private String documentCountry;
+    private String documentIssuingCountry;
     private boolean active;
 }

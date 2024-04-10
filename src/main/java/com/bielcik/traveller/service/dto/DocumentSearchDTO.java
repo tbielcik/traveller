@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 public class DocumentSearchDTO {
     private DocumentType documentType;
-    private Long documentNumber;
+    private String documentNumber;
     private String documentCountry;
 }

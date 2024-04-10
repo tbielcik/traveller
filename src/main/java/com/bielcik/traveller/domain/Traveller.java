@@ -31,8 +31,13 @@ public class Traveller {
     @Column(unique = true)
     private String mobileNumber;
 
-    @OneToMany(mappedBy = "traveller", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "traveller", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<TravellerDocument> travellerDocuments = new ArrayList<>();
 
     private boolean deleted;
+
+    public void addDocument(TravellerDocument travellerDocument) {
+        travellerDocument.setTraveller(this);
+        travellerDocuments.add(travellerDocument);
+    }
 }

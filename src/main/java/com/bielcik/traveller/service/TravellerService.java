@@ -3,6 +3,7 @@ package com.bielcik.traveller.service;
 import com.bielcik.traveller.domain.DocumentType;
 import com.bielcik.traveller.domain.Traveller;
 import com.bielcik.traveller.repository.TravellerRepository;
+import com.bielcik.traveller.service.dto.DocumentSearchDTO;
 import com.bielcik.traveller.service.dto.TravellerDTO;
 import com.bielcik.traveller.service.mapper.TravellerMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +25,20 @@ public class TravellerService {
 
     public TravellerDTO save(TravellerDTO travellerDTO) {
         log.info("Going to save Traveller: {}", travellerDTO);
+        travellerDTO.getTravellerDocuments().forEach(document -> document.setTravellerId(travellerDTO.getTravellerId()));
         Traveller traveller = travellerRepository.save(travellerMapper.toEntity(travellerDTO));
         return travellerMapper.toDto(traveller);
+    }
+
+    public TravellerDTO update(TravellerDTO travellerDTO) {
+        log.info("Going to update Traveller: {}", travellerDTO);
+        Optional<Traveller> traveller = travellerRepository.findByTravellerIdAndDeletedIsFalse(travellerDTO.getTravellerId());
+        if (traveller.isEmpty()) {
+            throw new RuntimeException("Invalid traveller id: " + travellerDTO.getTravellerId());
+        }
+        travellerDTO.getTravellerDocuments().forEach(document -> document.setTravellerId(travellerDTO.getTravellerId()));
+        Traveller savedTraveller = travellerRepository.save(travellerMapper.toEntity(travellerDTO));
+        return travellerMapper.toDto(savedTraveller);
     }
 
     public Optional<TravellerDTO> findByEmail(String email) {
@@ -40,6 +53,11 @@ public class TravellerService {
 
     public Optional<TravellerDTO> findByDocument(String documentNumber, DocumentType documentType, String documentIssuingCountry) {
         Optional<Traveller> traveller = travellerRepository.findByDocumentTypeAndNumberAndIssuingCountryAndActive(documentType, documentNumber, documentIssuingCountry);
+        return traveller.map(travellerMapper::toDto);
+    }
+
+    public Optional<TravellerDTO> findByDocument(DocumentSearchDTO documentSearchDTO) {
+        Optional<Traveller> traveller = travellerRepository.findByDocumentTypeAndNumberAndIssuingCountryAndActive(documentSearchDTO.getDocumentType(), documentSearchDTO.getDocumentNumber(), documentSearchDTO.getDocumentCountry());
         return traveller.map(travellerMapper::toDto);
     }
 

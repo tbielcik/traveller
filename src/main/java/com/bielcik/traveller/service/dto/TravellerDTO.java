@@ -19,4 +19,5 @@ public class TravellerDTO {
     private String mobileNumber;
 
     private List<TravellerDocumentDTO> travellerDocuments = new ArrayList<>();
+    private boolean deleted;
 }

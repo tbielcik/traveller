@@ -23,7 +23,7 @@ public class TravellerDocument {
     private String documentIssuingCountry;
 
     @ManyToOne
-    @JoinColumn(name = "traveller_id")
+    @JoinColumn(name = "travellerId")
     private Traveller traveller;
 
     @Column
