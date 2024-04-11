@@ -7,5 +7,5 @@ import lombok.Data;
 public class DocumentSearchDTO {
     private DocumentType documentType;
     private String documentNumber;
-    private String documentCountry;
+    private String documentIssuingCountry;
 }

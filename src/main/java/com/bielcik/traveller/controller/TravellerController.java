@@ -6,6 +6,7 @@ import com.bielcik.traveller.service.dto.TravellerDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MissingRequestValueException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -30,7 +31,7 @@ public class TravellerController {
     }
 
     @GetMapping("/document")
-    public TravellerDTO getTravellerByMobilePhone(@RequestParam DocumentSearchDTO documentSearchDTO) {
+    public TravellerDTO getTravellerByDocument(DocumentSearchDTO documentSearchDTO) {
         log.info("Get travellerByDocument: {}", documentSearchDTO);
         return travellerService.findByDocument(documentSearchDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
@@ -38,12 +39,18 @@ public class TravellerController {
     @PostMapping
     public TravellerDTO createTraveller(@RequestBody TravellerDTO travellerDTO) {
         log.info("Create traveller: {}", travellerDTO);
+        if (travellerDTO.getTravellerId() != null) {
+            throw new IllegalArgumentException("A new traveller cannot already have an ID");
+        }
         return travellerService.save(travellerDTO);
     }
 
     @PutMapping
-    public TravellerDTO updateTraveller(@RequestBody TravellerDTO travellerDTO) {
+    public TravellerDTO updateTraveller(@RequestBody TravellerDTO travellerDTO) throws MissingRequestValueException {
         log.info("Update traveller: {}", travellerDTO);
+        if (travellerDTO.getTravellerId() == null) {
+            throw new MissingRequestValueException("Missing travellerId");
+        }
         return travellerService.update(travellerDTO);
     }
 
