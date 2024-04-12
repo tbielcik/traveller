@@ -22,6 +22,7 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -62,16 +63,16 @@ class TravellerControllerIntTest {
 
     @Container
     @ServiceConnection
-    private static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:13")
+    private static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:16")
             .withDatabaseName("test")
             .withUsername("test")
             .withPassword("test")
-            .withExposedPorts(5432)
-            .withCreateContainerCmdModifier(cmd -> {
-                cmd.getHostConfig().withPortBindings(
-                        new PortBinding(Ports.Binding.bindPort(25432),
-                                new ExposedPort(5432)));
-            })
+//            .withExposedPorts(5432)
+//            .withCreateContainerCmdModifier(cmd -> {
+//                cmd.getHostConfig().withPortBindings(
+//                        new PortBinding(Ports.Binding.bindPort(25432),
+//                                new ExposedPort(5432)));
+//            })
             ;
 
     @BeforeEach

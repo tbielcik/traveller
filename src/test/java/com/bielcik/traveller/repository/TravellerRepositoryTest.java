@@ -12,6 +12,7 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -35,30 +36,31 @@ class TravellerRepositoryTest {
     private TravellerRepository travellerRepository;
 
     @Container
-    private static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:13")
+    @ServiceConnection
+    private static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>("postgres:16")
             .withDatabaseName("test")
             .withUsername("test")
             .withPassword("test")
-            .withExposedPorts(5432)
-            .withCreateContainerCmdModifier(cmd -> {
-                cmd.getHostConfig().withPortBindings(
-                        new PortBinding(Ports.Binding.bindPort(25432),
-                                new ExposedPort(5432)));
-            })
+//            .withExposedPorts(5432)
+//            .withCreateContainerCmdModifier(cmd -> {
+//                cmd.getHostConfig().withPortBindings(
+//                        new PortBinding(Ports.Binding.bindPort(25432),
+//                                new ExposedPort(5432)));
+//            })
             ;
 
-    @TestConfiguration
-    static class TestConfig {
-        @Bean
-        public DataSource dataSource() {
-            return DataSourceBuilder.create()
-                    .driverClassName(postgresContainer.getDriverClassName())
-                    .url(postgresContainer.getJdbcUrl())
-                    .username(postgresContainer.getUsername())
-                    .password(postgresContainer.getPassword())
-                    .build();
-        }
-    }
+//    @TestConfiguration
+//    static class TestConfig {
+//        @Bean
+//        public DataSource dataSource() {
+//            return DataSourceBuilder.create()
+//                    .driverClassName(postgresContainer.getDriverClassName())
+//                    .url(postgresContainer.getJdbcUrl())
+//                    .username(postgresContainer.getUsername())
+//                    .password(postgresContainer.getPassword())
+//                    .build();
+//        }
+//    }
 
     @Test
 //    @Transactional(propagation = Propagation.NEVER)
